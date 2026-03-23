@@ -7,23 +7,34 @@
     <OutputType Condition="'$(OutputType)'==''">Package</OutputType>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform>x64</Platform>
+	<AppSource>..\FinConsolidation\bin\Release\net8.0-windows</AppSource>
+	<IconPath>assets\fin_con.ico</IconPath>
   </PropertyGroup>
 
-  <!-- Always restore/import Heat so harvesting targets are available -->
+	<!-- Always restore/import Heat so harvesting targets are available -->
   <ItemGroup>
     <PackageReference Include="WixToolset.Heat" Version="4.0.6" />
   </ItemGroup>
 
-  <!-- ===== MSI build (OutputType=Package) ===== -->
+
+	<DefineConstants>
+		AppSource=$(AppSource);
+		IconPath=$(IconPath)
+	</DefineConstants>
+
+
+	<!-- ===== MSI build (OutputType=Package) ===== -->
   <PropertyGroup Condition="'$(OutputType)'=='Package'">
     <OutputName>FinancialConsolidation</OutputName>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(OutputType)'=='Package'">
-    <!-- Compile ONLY MSI authoring -->
-    <Compile Include="Product.wxs" />
 
-    <!-- Harvest the self-contained publish output into ComponentGroup CG.AppFiles -->
+	  <!-- Compile ONLY MSI authoring -->
+	  <Compile Include="Msi\wxs\Product.wxs" />
+	  <Compile Include="Msi\wxs\HarvestFiles.wxs" />
+
+	  <!-- Harvest the self-contained publish output into ComponentGroup CG.AppFiles -->
     <HarvestDirectory Include="$(MSBuildThisFileDirectory)..\artifacts\publish\win-x64">
       <ComponentGroupName>CG.AppFiles</ComponentGroupName>
       <DirectoryRefId>APPDIR</DirectoryRefId>

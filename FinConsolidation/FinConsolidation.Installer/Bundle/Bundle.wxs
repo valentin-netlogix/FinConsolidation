@@ -49,8 +49,10 @@
           Id="FinConsolidationMsi"
           SourceFile=".\bin\Release\FinancialConsolidation.msi"
           DisplayName="Financial Consolidation"
-          Permanent="no">
+          Permanent="no"
+		  ForceReinstall="yes">
         <MsiProperty Name="MSIINSTALLPERUSER" Value="1" />
+		<MsiProperty Name="REINSTALLMODE" Value="amus" />
       </MsiPackage>
     </Chain>
   </Bundle>
