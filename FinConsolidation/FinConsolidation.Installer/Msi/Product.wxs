@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <Package
+      Name="Financial Consolidation"
+      Manufacturer="Netlogix Ltd."
+      Version="1.1.3"
+      Language="1033"
+      Scope="perUser"
+      Compressed="yes"
+      ProductCode="*"
+      UpgradeCode="{2C3E4C3E-5E2C-4EF5-9C6C-AB12CD34EF56}">
+
+    <MajorUpgrade
+        AllowSameVersionUpgrades="yes"
+        DowngradeErrorMessage="A newer version of Financial Consolidation is already installed." />
+
+    <!-- %LOCALAPPDATA%\Netlogix\FinConsolidation -->
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="INSTALLFOLDER" Name="Netlogix">
+        <Directory Id="APPDIR" Name="FinConsolidation" />
+      </Directory>
+    </StandardDirectory>
+
+    <!-- Desktop shortcut -->
+    <StandardDirectory Id="DesktopFolder" />
+    <Icon Id="AppIcon" SourceFile="$(var.IconPath)" />
+
+    <Component Id="CMP.DesktopShortcut" Directory="DesktopFolder"
+               Guid="{D1193A88-7D20-4C6B-97C9-BB3E12E3C3C5}">
+      <Shortcut
+          Id="SHC.Desktop"
+          Name="Financial Consolidation"
+          Target="[APPDIR]FinConsolidation.exe"
+          WorkingDirectory="APPDIR"
+          Icon="AppIcon" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\Netlogix\FinConsolidation"
+                     Name="DesktopShortcut"
+                     Type="integer"
+                     Value="1"
+                     KeyPath="yes" />
+    </Component>
+
+
+  <DirectoryRef Id="APPDIR">
+    <Component Id="CMP.Cleanup.APPDIR" Guid="{C0B3A7E1-3E7A-4A2B-97F0-9E1B2C3D4E5F}">
+      <RegistryValue Root="HKCU"
+                    Key="Software\Netlogix\FinConsolidation"
+                    Name="AppDir"
+                    Type="string"
+                    Value="[APPDIR]"
+                    KeyPath="yes"/>
+      <RemoveFolder On="uninstall"/>
+    </Component>
+  </DirectoryRef>
+
+  <DirectoryRef Id="INSTALLFOLDER">
+    <Component Id="CMP.Cleanup.INSTALLFOLDER" Guid="{3C6C2F4D-8A7D-4F27-8179-3E2B93F88B01}">
+      <RegistryValue Root="HKCU"
+                    Key="Software\Netlogix\FinConsolidation"
+                    Name="InstallFolder"
+                    Type="string"
+                    Value="[INSTALLFOLDER]"
+                    KeyPath="yes"/>
+      <RemoveFolder On="uninstall"/>
+    </Component>
+  </DirectoryRef>
+
+
+  <Feature Id="MainFeature" Title="Financial Consolidation" Level="1">
+    <ComponentGroupRef Id="CG.AppFiles"/>
+    <ComponentRef Id="CMP.DesktopShortcut"/>
+    <ComponentRef Id="CMP.Cleanup.APPDIR"/>
+    <ComponentRef Id="CMP.Cleanup.INSTALLFOLDER"/>
+  </Feature>
+
+
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+    <SetProperty Id="ARPINSTALLLOCATION" Value="[APPDIR]" After="CostFinalize" Sequence="both" />
+  </Package>
+</Wix>

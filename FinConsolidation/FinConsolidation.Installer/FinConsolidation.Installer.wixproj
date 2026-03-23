@@ -1,0 +1,47 @@
+<Project Sdk="WixToolset.Sdk/4.0.6">
+  <PropertyGroup>
+    <!-- Stop SDK from auto-including all .wxs so our conditions work -->
+    <EnableDefaultItems>false</EnableDefaultItems>
+
+    <!-- Select output at build time: Package (MSI) or Bundle (EXE). Default: Package -->
+    <OutputType Condition="'$(OutputType)'==''">Package</OutputType>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform>x64</Platform>
+  </PropertyGroup>
+
+  <!-- Always restore/import Heat so harvesting targets are available -->
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Heat" Version="4.0.6" />
+  </ItemGroup>
+
+  <!-- ===== MSI build (OutputType=Package) ===== -->
+  <PropertyGroup Condition="'$(OutputType)'=='Package'">
+    <OutputName>FinancialConsolidation</OutputName>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(OutputType)'=='Package'">
+    <!-- Compile ONLY MSI authoring -->
+    <Compile Include="Product.wxs" />
+
+    <!-- Harvest the self-contained publish output into ComponentGroup CG.AppFiles -->
+    <HarvestDirectory Include="$(MSBuildThisFileDirectory)..\artifacts\publish\win-x64">
+      <ComponentGroupName>CG.AppFiles</ComponentGroupName>
+      <DirectoryRefId>APPDIR</DirectoryRefId>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+      <SuppressRegistry>true</SuppressRegistry>
+      <SuppressCom>true</SuppressCom>
+      <!-- AutogenerateGuids is optional; defaults are fine -->
+    </HarvestDirectory>
+  </ItemGroup>
+
+  <!-- ===== Bundle build (OutputType=Bundle) ===== -->
+  <PropertyGroup Condition="'$(OutputType)'=='Bundle'">
+    <OutputName>FinConsolidationInstaller_1.1.3</OutputName>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(OutputType)'=='Bundle'">
+    <Compile Include="Bundle.wxs" />
+    <PackageReference Include="WixToolset.Bal.wixext" Version="4.0.6" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="4.0.6" />
+  </ItemGroup>
+</Project>

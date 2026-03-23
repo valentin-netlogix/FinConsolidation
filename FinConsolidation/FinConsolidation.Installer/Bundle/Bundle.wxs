@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+
+  <Bundle
+      Name="Financial Consolidation"
+      Version="1.1.3"
+      Manufacturer="Netlogix Ltd."
+      UpgradeCode="{5F4F8AE1-4FF7-4C83-A9AF-123456789ABC}"
+      Compressed="yes"
+      IconSourceFile="fin_con.ico"
+      DisableModify="yes">
+
+    <BootstrapperApplication>
+      <bal:WixStandardBootstrapperApplication
+          Theme="hyperlinkLicense"
+          LicenseUrl=""
+          SuppressOptionsUI="yes"
+          SuppressRepair="yes"
+          ShowVersion="yes" />
+    </BootstrapperApplication>
+
+    <!-- WebView2 detection (machine + per-user) -->
+    <util:RegistrySearch Id="WV2_Machine32" Root="HKLM"
+      Key="SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+      Value="pv" Result="value" Variable="WV2pvLM32"/>
+    <util:RegistrySearch Id="WV2_User" Root="HKCU"
+      Key="Software\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+      Value="pv" Result="value" Variable="WV2pvCU"/>
+    <util:RegistrySearch Id="WV2_Machine64" Root="HKLM"
+      Key="SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+      Value="pv" Result="value" Variable="WV2pvLM64"/>
+
+    <Chain>
+      <!-- WebView2 Evergreen Standalone (install if missing) -->
+      <ExePackage
+          Id="WebView2Evergreen"
+          DisplayName="Microsoft Edge WebView2 Runtime"
+          PerMachine="no"
+          DetectCondition="WV2pvLM32 OR WV2pvCU OR WV2pvLM64"
+          SourceFile="MicrosoftEdgeWebView2RuntimeInstallerX64.exe"
+          InstallArguments="/silent /install"
+          Permanent="yes"
+          Vital="no" />
+
+      <!-- MSI: per-user -->
+      <MsiPackage
+          Id="FinConsolidationMsi"
+          SourceFile=".\bin\Release\FinancialConsolidation.msi"
+          DisplayName="Financial Consolidation"
+          Permanent="no">
+        <MsiProperty Name="MSIINSTALLPERUSER" Value="1" />
+      </MsiPackage>
+    </Chain>
+  </Bundle>
+</Wix>
