@@ -1,0 +1,40 @@
+<Project Sdk="WixToolset.Sdk/4.0.6">
+  <PropertyGroup>
+    <Configuration>Release</Configuration>
+    <Platform>x64</Platform>
+
+    <AppSource>..\FinConsolidation\bin\x64\Release\net8.0-windows\win-x64\publish</AppSource>
+    <IconPath>$(MSBuildThisFileDirectory)assets\fin_con.ico</IconPath>
+
+    <DefineConstants>
+      AppSource=$(AppSource);
+      IconPath=$(IconPath)
+    </DefineConstants>
+
+    <OutputName>FinancialConsolidation</OutputName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Heat" Version="4.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BindPath Include="$(AppSource)" Id="SourceDir" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <HarvestDirectory Include="$(AppSource)">
+      <ComponentGroupName>CG.AppFiles</ComponentGroupName>
+      <DirectoryRefId>APPDIR</DirectoryRefId>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+      <SuppressRegistry>true</SuppressRegistry>
+      <SuppressCom>true</SuppressCom>
+    </HarvestDirectory>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Include="$(BaseIntermediateOutputPath)**\*.wxs" />
+  </ItemGroup>
+
+</Project>
