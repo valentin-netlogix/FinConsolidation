@@ -4,6 +4,7 @@
 .vs/
 bin/
 obj/
+artifacts/
 *.user
 *.suo
 *.userosscache
@@ -29,6 +30,17 @@ obj/
 *.wixlib
 *.ba
 
+# =================================================================
+# ===== WebView2 Fixed Runtime (rebuilt from official source) =====
+# =================================================================
+App/WebView2Runtime/
+App/WebView2Fixed/
+
+# ===== Visual Studio =====
+.vs/
+*.user
+*.suo
+
 # ===============================
 # Logs
 # ===============================
@@ -44,4 +56,13 @@ Thumbs.db
 # Secrets / local config
 # ===============================
 appsettings.Development.json
-``
+
+# =========================================
+# ===== Generated application payload =====
+# =========================================
+App/
+
+# =============================================
+# ===== Installer build sources & outputs =====
+# =============================================
+Installer/

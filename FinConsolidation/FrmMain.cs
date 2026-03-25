@@ -446,7 +446,38 @@ namespace FinConsolidation
         {
             if (_webViewReady) return;
 
-            await WebView.EnsureCoreWebView2Async();
+            string appDir = AppDomain.CurrentDomain.BaseDirectory;
+
+            string webViewRuntimePath =
+                    Path.Combine(appDir, "WebView2Runtime");
+
+            string userDataPath =
+                    Path.Combine(appDir, "WebView2UserData");
+
+
+            // ✅ TEMPORARY GUARD — ADD THIS
+            string runtimeExe =
+                Path.Combine(webViewRuntimePath, "msedgewebview2.exe");
+
+            if (!File.Exists(runtimeExe))
+            {
+                MessageBox.Show(
+                    $"WebView2 Fixed Runtime not found.\n\nExpected:\n{runtimeExe}",
+                    "WebView2 startup error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                return;
+            }
+            // ✅ END GUARD
+
+
+            var environment = await CoreWebView2Environment.CreateAsync(
+                    browserExecutableFolder: webViewRuntimePath,
+                    userDataFolder: userDataPath);
+
+
+            await WebView.EnsureCoreWebView2Async(environment);
 
             ConfigureWebView(WebView.CoreWebView2);
 
