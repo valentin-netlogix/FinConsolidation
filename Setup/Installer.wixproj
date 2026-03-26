@@ -1,0 +1,26 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+  <PropertyGroup>
+    <OutputName>FinancialConsolidation-1.1.6</OutputName>
+    <OutputType>Package</OutputType>
+    <DefineConstants>AppSource=..\bin\Release\net8.0-windows\win-x64\publish;ProductVersion=1.1.6</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Product.wxs" />
+    
+    <Compile Remove="Bundle.wxs" />
+
+    <HarvestDirectory Include="..\bin\Release\net8.0-windows\win-x64\publish">
+      <ComponentGroupName>AppComponents</ComponentGroupName>
+      <DirectoryRefId>InstallDir</DirectoryRefId>
+      <PreprocessorVariable>var.AppSource</PreprocessorVariable>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+    </HarvestDirectory>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Heat" Version="5.0.2" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="5.0.2" />
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+  </ItemGroup>
+</Project>

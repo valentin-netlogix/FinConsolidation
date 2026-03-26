@@ -1,0 +1,25 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+	xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
+
+<Bundle
+	Name="FinConsolidation"
+	IconSourceFile="fin_con.ico"
+	Version="1.1.6"
+	Manufacturer="Netlogix Ltd"
+	UpgradeCode="{2C3E4C3E-5E2C-4EF5-9C6C-AB12CD34EF56}">
+
+	<BootstrapperApplication>
+		<bal:WixStandardBootstrapperApplication
+			LicenseUrl=""
+			Theme="hyperlinkLicense" />
+	</BootstrapperApplication>
+
+    <Chain>
+		<MsiPackage
+			Id="FinConsolidationMsi"
+			SourceFile="FinancialConsolidation-1.1.6.msi"
+			Visible="no"
+			ForcePerMachine="no" />
+	</Chain>
+</Bundle>
+</Wix>

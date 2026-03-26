@@ -1,0 +1,297 @@
+
++---App
+¦   +---cs
+¦   +---de
+¦   +---es
+¦   +---FinConsolidation.exe.WebView2
+¦   ¦   +---EBWebView
+¦   ¦       +---AutoLaunchProtocolsComponent
+¦   ¦       ¦   +---1.0.0.10
+¦   ¦       +---BrowserMetrics
+¦   ¦       +---CertificateRevocation
+¦   ¦       ¦   +---6498.2025.9.4
+¦   ¦       +---component_crx_cache
+¦   ¦       +---Crashpad
+¦   ¦       ¦   +---attachments
+¦   ¦       ¦   +---reports
+¦   ¦       +---Default
+¦   ¦       ¦   +---AutofillAiModelCache
+¦   ¦       ¦   +---AutofillStrikeDatabase
+¦   ¦       ¦   +---blob_storage
+¦   ¦       ¦   ¦   +---22898255-949a-4441-9915-298236146078
+¦   ¦       ¦   +---BudgetDatabase
+¦   ¦       ¦   +---Cache
+¦   ¦       ¦   ¦   +---Cache_Data
+¦   ¦       ¦   ¦   +---No_Vary_Search
+¦   ¦       ¦   +---ClientCertificates
+¦   ¦       ¦   +---Code Cache
+¦   ¦       ¦   ¦   +---js
+¦   ¦       ¦   ¦   ¦   +---index-dir
+¦   ¦       ¦   ¦   +---wasm
+¦   ¦       ¦   ¦       +---index-dir
+¦   ¦       ¦   +---commerce_subscription_db
+¦   ¦       ¦   +---DawnGraphiteCache
+¦   ¦       ¦   +---DawnWebGPUCache
+¦   ¦       ¦   +---discounts_db
+¦   ¦       ¦   +---discount_infos_db
+¦   ¦       ¦   +---EdgeJourneys
+¦   ¦       ¦   +---Extension Rules
+¦   ¦       ¦   +---Extension Scripts
+¦   ¦       ¦   +---Extension State
+¦   ¦       ¦   +---Feature Engagement Tracker
+¦   ¦       ¦   ¦   +---AvailabilityDB
+¦   ¦       ¦   ¦   +---EventDB
+¦   ¦       ¦   +---GPUCache
+¦   ¦       ¦   +---Local Storage
+¦   ¦       ¦   ¦   +---leveldb
+¦   ¦       ¦   +---Network
+¦   ¦       ¦   +---optimization_guide_hint_cache_store
+¦   ¦       ¦   +---parcel_tracking_db
+¦   ¦       ¦   +---PersistentOriginTrials
+¦   ¦       ¦   +---Safe Browsing Network
+¦   ¦       ¦   +---Session Storage
+¦   ¦       ¦   +---Sessions
+¦   ¦       ¦   +---Shared Dictionary
+¦   ¦       ¦   ¦   +---cache
+¦   ¦       ¦   ¦       +---index-dir
+¦   ¦       ¦   +---shared_proto_db
+¦   ¦       ¦   ¦   +---metadata
+¦   ¦       ¦   +---Site Characteristics Database
+¦   ¦       ¦   ¦   +---lost
+¦   ¦       ¦   +---Sync Data
+¦   ¦       ¦       +---LevelDB
+¦   ¦       +---Domain Actions
+¦   ¦       ¦   +---3.0.0.16
+¦   ¦       +---extensions_crx_cache
+¦   ¦       +---GraphiteDawnCache
+¦   ¦       +---GrShaderCache
+¦   ¦       +---hyphen-data
+¦   ¦       ¦   +---120.0.6050.0
+¦   ¦       ¦       +---_metadata
+¦   ¦       +---MEIPreload
+¦   ¦       +---OriginTrials
+¦   ¦       ¦   +---0.0.1.7
+¦   ¦       +---PKIMetadata
+¦   ¦       +---ShaderCache
+¦   ¦       +---SmartScreen
+¦   ¦       ¦   +---local
+¦   ¦       ¦   +---RemoteData
+¦   ¦       +---Snapshots
+¦   ¦       ¦   +---145.0.3800.97
+¦   ¦       ¦       +---Default
+¦   ¦       ¦           +---AutofillStrikeDatabase
+¦   ¦       ¦           +---Sessions
+¦   ¦       ¦           +---Sync Data
+¦   ¦       ¦               +---LevelDB
+¦   ¦       +---Speech Recognition
+¦   ¦       ¦   +---1.15.0.1
+¦   ¦       +---Subresource Filter
+¦   ¦       ¦   +---Indexed Rules
+¦   ¦       ¦   ¦   +---37
+¦   ¦       ¦   ¦       +---10.34.0.81
+¦   ¦       ¦   +---Unindexed Rules
+¦   ¦       ¦       +---10.34.0.81
+¦   ¦       +---Trust Protection Lists
+¦   ¦       +---TrustTokenKeyCommitments
+¦   ¦       ¦   +---2026.2.25.1
+¦   ¦       ¦       +---_metadata
+¦   ¦       +---WidevineCdm
+¦   +---fr
+¦   +---it
+¦   +---ja
+¦   +---ko
+¦   +---pl
+¦   +---pt-BR
+¦   +---ru
+¦   +---runtimes
+¦   ¦   +---unix
+¦   ¦   ¦   +---lib
+¦   ¦   ¦       +---net8.0
+¦   ¦   +---win
+¦   ¦   ¦   +---lib
+¦   ¦   ¦       +---net8.0
+¦   ¦   +---win-arm64
+¦   ¦   ¦   +---native
+¦   ¦   +---win-x64
+¦   ¦   ¦   +---native
+¦   ¦   +---win-x86
+¦   ¦       +---native
+¦   +---tr
+¦   +---UI
+¦   +---WebView2Runtime
+¦   ¦   +---AdSelectionAttestationsPreloaded
+¦   ¦   +---EBWebView
+¦   ¦   ¦   +---x64
+¦   ¦   ¦   +---x86
+¦   ¦   +---edge_feedback
+¦   ¦   +---Extensions
+¦   ¦   +---Installer
+¦   ¦   +---Locales
+¦   ¦   +---MEIPreload
+¦   ¦   +---PdfPreview
+¦   ¦   +---Trust Protection Lists
+¦   ¦   ¦   +---Mu
+¦   ¦   ¦   +---Sigma
+¦   ¦   +---WidevineCdm
+¦   ¦       +---_platform_specific
+¦   ¦           +---win_x64
+¦   +---WebView2UserData
+¦   ¦   +---EBWebView
+¦   ¦       +---AutoLaunchProtocolsComponent
+¦   ¦       +---BrowserMetrics
+¦   ¦       +---CertificateRevocation
+¦   ¦       +---component_crx_cache
+¦   ¦       +---Crashpad
+¦   ¦       ¦   +---attachments
+¦   ¦       ¦   +---reports
+¦   ¦       +---Default
+¦   ¦       ¦   +---Cache
+¦   ¦       ¦   ¦   +---Cache_Data
+¦   ¦       ¦   ¦   +---No_Vary_Search
+¦   ¦       ¦   +---ClientCertificates
+¦   ¦       ¦   +---Code Cache
+¦   ¦       ¦   ¦   +---js
+¦   ¦       ¦   ¦   ¦   +---index-dir
+¦   ¦       ¦   ¦   +---wasm
+¦   ¦       ¦   ¦       +---index-dir
+¦   ¦       ¦   +---commerce_subscription_db
+¦   ¦       ¦   +---DawnGraphiteCache
+¦   ¦       ¦   +---DawnWebGPUCache
+¦   ¦       ¦   +---discounts_db
+¦   ¦       ¦   +---discount_infos_db
+¦   ¦       ¦   +---EdgeJourneys
+¦   ¦       ¦   +---Extension Rules
+¦   ¦       ¦   +---Extension Scripts
+¦   ¦       ¦   +---Extension State
+¦   ¦       ¦   +---GPUCache
+¦   ¦       ¦   +---Local Storage
+¦   ¦       ¦   ¦   +---leveldb
+¦   ¦       ¦   +---Network
+¦   ¦       ¦   +---parcel_tracking_db
+¦   ¦       ¦   +---PersistentOriginTrials
+¦   ¦       ¦   +---Safe Browsing Network
+¦   ¦       ¦   +---Session Storage
+¦   ¦       ¦   +---Sessions
+¦   ¦       ¦   +---Shared Dictionary
+¦   ¦       ¦   ¦   +---cache
+¦   ¦       ¦   ¦       +---index-dir
+¦   ¦       ¦   +---shared_proto_db
+¦   ¦       ¦   ¦   +---metadata
+¦   ¦       ¦   +---Site Characteristics Database
+¦   ¦       ¦   +---Sync Data
+¦   ¦       ¦       +---LevelDB
+¦   ¦       +---Domain Actions
+¦   ¦       +---GraphiteDawnCache
+¦   ¦       +---GrShaderCache
+¦   ¦       +---hyphen-data
+¦   ¦       +---MEIPreload
+¦   ¦       +---OriginTrials
+¦   ¦       +---PKIMetadata
+¦   ¦       +---ShaderCache
+¦   ¦       +---SmartScreen
+¦   ¦       ¦   +---local
+¦   ¦       ¦   +---RemoteData
+¦   ¦       +---Speech Recognition
+¦   ¦       +---Subresource Filter
+¦   ¦       ¦   +---Unindexed Rules
+¦   ¦       +---Trust Protection Lists
+¦   ¦       +---TrustTokenKeyCommitments
+¦   ¦       +---WidevineCdm
+¦   +---win-x64
+¦   ¦   +---cs
+¦   ¦   +---de
+¦   ¦   +---es
+¦   ¦   +---fr
+¦   ¦   +---it
+¦   ¦   +---ja
+¦   ¦   +---ko
+¦   ¦   +---msixpublish
+¦   ¦   ¦   +---cs
+¦   ¦   ¦   +---de
+¦   ¦   ¦   +---es
+¦   ¦   ¦   +---fr
+¦   ¦   ¦   +---it
+¦   ¦   ¦   +---ja
+¦   ¦   ¦   +---ko
+¦   ¦   ¦   +---pl
+¦   ¦   ¦   +---pt-BR
+¦   ¦   ¦   +---ru
+¦   ¦   ¦   +---runtimes
+¦   ¦   ¦   ¦   +---win-x64
+¦   ¦   ¦   ¦       +---native
+¦   ¦   ¦   +---tr
+¦   ¦   ¦   +---UI
+¦   ¦   ¦   +---zh-Hans
+¦   ¦   ¦   +---zh-Hant
+¦   ¦   +---pl
+¦   ¦   +---pt-BR
+¦   ¦   +---ru
+¦   ¦   +---runtimes
+¦   ¦   ¦   +---win-x64
+¦   ¦   ¦       +---native
+¦   ¦   +---tr
+¦   ¦   +---UI
+¦   ¦   +---zh-Hans
+¦   ¦   +---zh-Hant
+¦   +---zh-Hans
+¦   +---zh-Hant
++---artifacts
+¦   +---publish
+¦       +---win-x64
+¦           +---runtimes
+¦           ¦   +---win-x64
+¦           ¦       +---native
+¦           +---UI
++---bin
+¦   +---Release
+¦       +---net8.0-windows
+¦           +---win-x64
+¦               +---cs
+¦               +---de
+¦               +---es
+¦               +---fr
+¦               +---it
+¦               +---ja
+¦               +---ko
+¦               +---pl
+¦               +---pt-BR
+¦               +---publish
+¦               ¦   +---runtimes
+¦               ¦   ¦   +---win-x64
+¦               ¦   ¦       +---native
+¦               ¦   +---UI
+¦               +---ru
+¦               +---runtimes
+¦               ¦   +---win-x64
+¦               ¦       +---native
+¦               +---tr
+¦               +---UI
+¦               +---zh-Hans
+¦               +---zh-Hant
++---Installer
+¦   +---.wix
+¦   ¦   +---extensions
+¦   ¦       +---WixToolset.Bal.wixext
+¦   ¦       ¦   +---7.0.0-rc.2
+¦   ¦       ¦       +---wixext7
+¦   ¦       +---WixToolset.Util.wixext
+¦   ¦           +---7.0.0-rc.2
+¦   ¦               +---wixext7
+¦   +---bin
+¦   ¦   +---Release
+¦   +---obj
+¦       +---Release
++---obj
+¦   +---Release
+¦       +---net8.0-windows
+¦           +---win-x64
+¦               +---ref
+¦               +---refint
++---Properties
++---publish
+¦   +---runtimes
+¦   ¦   +---win-x64
+¦   ¦       +---native
+¦   +---UI
++---Resources
++---UI

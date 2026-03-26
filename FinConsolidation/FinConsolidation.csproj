@@ -37,19 +37,13 @@
     <None Remove="UI\styles.css" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="fin_con.ico" />
-    <Content Include="UI\app.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="UI\index.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="UI\styles.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="UI\**">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		</Content>
+	</ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\fin_con.ico" />
