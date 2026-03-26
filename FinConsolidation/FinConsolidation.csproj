@@ -14,12 +14,15 @@
 		<Version>1.1.6</Version>
 		<AssemblyVersion>1.1.6</AssemblyVersion>
 		<FileVersion>1.1.6</FileVersion>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<SelfContained>true</SelfContained>
+		<PublishSingleFile>true</PublishSingleFile>
+		<IncludeNativeLibrariesForSelfContained>true</IncludeNativeLibrariesForSelfContained>
 	</PropertyGroup>
 
-
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Optimize>True</Optimize>
-  </PropertyGroup>
+		<Optimize>True</Optimize>
+	</PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="FinConsolidation.Package\**" />
@@ -44,6 +47,7 @@
     </Content>
     <Content Include="UI\styles.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
 
