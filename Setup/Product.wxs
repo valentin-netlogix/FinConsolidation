@@ -1,69 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
 
-  <Package
-    Name="FinConsolidation"
-    Manufacturer="Netlogix Ltd"
-    Version="$(var.ProductVersion)"
-    Language="1033"
-    UpgradeCode="{2C3E4C3E-5E2C-4EF5-9C6C-AB12CD34EF56}"
-    InstallerVersion="500"
-    Compressed="yes"
-    Scope="perUser">
+<Package
+	Name="FinConsolidation"
+	Manufacturer="Netlogix Ltd"
+	Version="$(var.ProductVersion)"
+	Language="1033"
+	UpgradeCode="{2C3E4C3E-5E2C-4EF5-9C6C-AB12CD34EF56}"
+	InstallerVersion="500"
+	Compressed="yes"
+	Scope="perUser">
 
-    <MajorUpgrade
-      Schedule="afterInstallExecute"
-      AllowSameVersionUpgrades="no"
-      DowngradeErrorMessage="A newer version is already installed." />
+	<MajorUpgrade
+	Schedule="afterInstallExecute"
+	AllowSameVersionUpgrades="no"
+	DowngradeErrorMessage="A newer version is already installed." />
 
-    <Icon Id="AppIcon" SourceFile="fin_con.ico" />
+	<Icon Id="AppIcon" SourceFile="fin_con.ico" />
 
-    <Property Id="ARPHELPLINK" Value="https://netlogixgroup.co.nz" />
-    <Property Id="ARPURLINFOABOUT" Value="https://netlogixgroup.co.nz" />
-    <Property Id="ARPCONTACT" Value="valentin.gourine@netlogixgroup.co.nz" />
-    <Property Id="ARPNOREPAIR" Value="1" />
-    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+	<Property Id="ARPHELPLINK" Value="https://netlogixgroup.co.nz" />
+	<Property Id="ARPURLINFOABOUT" Value="https://netlogixgroup.co.nz" />
+	<Property Id="ARPCONTACT" Value="valentin.gourine@netlogixgroup.co.nz" />
+	<Property Id="ARPNOREPAIR" Value="1" />
+	<Property Id="ARPPRODUCTICON" Value="AppIcon" />
 
-    <MediaTemplate EmbedCab="yes" />
+	<!-- 
+		ICE69 Fix: 
+		We define a property that resolves to the full path of the EXE.
+		This decouples the Shortcut component from the Harvested component.
+	-->
+	<SetProperty Id="ExePath" Value="[#fil8H932G9Q7KhFYeXtEFUidnPzSto]" After="CostFinalize" />
 
-    <StandardDirectory Id="LocalAppDataFolder">
-      <Directory Id="NetlogixDir" Name="Netlogix">
-        <Directory Id="InstallDir" Name="FinConsolidation" />
-      </Directory>
-    </StandardDirectory>
+	<MediaTemplate EmbedCab="yes" />
 
-    <StandardDirectory Id="ProgramMenuFolder">
-      <Directory Id="NetlogixMenu" Name="Netlogix">
-        <Directory Id="AppMenuDir" Name="FinConsolidation" />
-      </Directory>
-    </StandardDirectory>
+	<!-- Main Installation Directories -->
+	<StandardDirectory Id="LocalAppDataFolder">
+		<Directory Id="NetlogixDir" Name="Netlogix">
+			<!-- Component to clean up the 'Netlogix' parent folder -->
+			<Component Id="CleanupNetlogixDir" Guid="DE3A4B5C-6D7E-4F8A-9B0C-1D2E3F4A5B6C">
+				<RegistryValue Root="HKCU" Key="Software\Netlogix\FinConsolidation" Name="dir_root" Type="integer" Value="1" KeyPath="yes" />
+				<RemoveFolder Id="RemoveNetlogixDir" On="uninstall" />
+			</Component>
 
-    <StandardDirectory Id="DesktopFolder" />
+			<Directory Id="InstallDir" Name="FinConsolidation">
+				<!-- Component to clean up the 'FinConsolidation' app folder -->
+				<Component Id="CleanupMainDir" Guid="*">
+					<RegistryValue Root="HKCU" Key="Software\Netlogix\FinConsolidation" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+					<RemoveFolder Id="RemoveInstallDir" On="uninstall" />
+				</Component>
+			</Directory>
+		</Directory>
+	</StandardDirectory>
 
-    <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="*">
-      <Shortcut
-        Id="DesktopShortcutLink"
-        Name="FinConsolidation"
-        Target="[InstallDir]FinConsolidation.exe"
-        WorkingDirectory="InstallDir" />
-      <RemoveFolder Id="RemoveDesktopShortcut" On="uninstall" />
-      <RegistryValue Root="HKCU" Key="Software\Netlogix\FinConsolidation" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
-    </Component>
+	<!-- Start Menu Directories -->
+	<StandardDirectory Id="ProgramMenuFolder">
+		<Directory Id="NetlogixMenu" Name="Netlogix">
+			<!-- Component to clean up the 'Netlogix' menu folder -->
+			<Component Id="CleanupNetlogixMenu" Guid="A1B2C3D4-E5F6-4A5B-8C9D-0E1F2A3B4C5D">
+				<RegistryValue Root="HKCU" Key="Software\Netlogix\FinConsolidation" Name="menu_root" Type="integer" Value="1" KeyPath="yes" />
+				<RemoveFolder Id="RemoveNetlogixMenu" On="uninstall" />
+			</Component>
 
-    <Component Id="StartMenuShortcut" Directory="AppMenuDir" Guid="*">
-      <Shortcut
-        Id="StartMenuShortcutLink"
-        Name="FinConsolidation"
-        Target="[InstallDir]FinConsolidation.exe"
-        WorkingDirectory="InstallDir" />
-      <RemoveFolder Id="RemoveAppMenuDir" On="uninstall" />
-      <RegistryValue Root="HKCU" Key="Software\Netlogix\FinConsolidation" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
-    </Component>
+			<Directory Id="AppMenuDir" Name="FinConsolidation">
+				<Component Id="CleanupMenuDir" Guid="*">
+					<RegistryValue Root="HKCU" Key="Software\Netlogix\FinConsolidation" Name="menu" Type="integer" Value="1" KeyPath="yes" />
+					<RemoveFolder Id="RemoveAppMenuDir" On="uninstall" />
+				</Component>
+			</Directory>
+		</Directory>
+	</StandardDirectory>
 
+	<StandardDirectory Id="DesktopFolder" />
+
+	<!-- 
+		Shortcuts: 
+		Using [ExePath] instead of [#fil...] to satisfy ICE69 validation.
+	-->
+	<Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="*">
+		<Shortcut
+			Id="DesktopShortcutLink"
+			Name="FinConsolidation"
+			Target="[ExePath]"
+			WorkingDirectory="InstallDir" 
+			Icon="AppIcon" />
+		<RegistryValue Root="HKCU" Key="Software\Netlogix\FinConsolidation" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+	</Component>
+
+	<Component Id="StartMenuShortcut" Directory="AppMenuDir" Guid="*">
+		<Shortcut
+			Id="StartMenuShortcutLink"
+			Name="FinConsolidation"
+			Target="[ExePath]"
+			WorkingDirectory="InstallDir"
+			Icon="AppIcon" />
+		<RegistryValue Root="HKCU" Key="Software\Netlogix\FinConsolidation" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+	</Component>
+
+	<!-- Features -->
 	<Feature Id="MainFeature" Title="FinConsolidation" Level="1">
-	<ComponentGroupRef Id="AppComponents" /> <ComponentRef Id="DesktopShortcut" />
-	<ComponentRef Id="StartMenuShortcut" />
+		<ComponentGroupRef Id="AppComponents" />
+		<ComponentRef Id="CleanupNetlogixDir" />
+		<ComponentRef Id="CleanupMainDir" />
+		<ComponentRef Id="CleanupNetlogixMenu" />
+		<ComponentRef Id="CleanupMenuDir" />
+		<ComponentRef Id="DesktopShortcut" />
+		<ComponentRef Id="StartMenuShortcut" />
 	</Feature>
 
-  </Package>
+</Package>
 </Wix>
