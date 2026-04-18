@@ -47,7 +47,6 @@ namespace FinConsolidation
         private const string PromptEnterTripRef = "Please enter a Trip Code before refreshing rates.";
         private const string PromptEnterConsRef = "Please enter a Consignment before refreshing rates.";
 
-
         private sealed class TableTotals
         {
             public int RowCount { get; set; }
@@ -790,9 +789,9 @@ namespace FinConsolidation
         }
 
         private async Task<(TablePayload table, TableTotals totals)> ExecApTestStrictWithTotalsAsync(
-            string? tripCode,
-            int action,
-            CancellationToken ct)
+           string? tripCode,
+           int action,
+           CancellationToken ct)
         {
             using var conn = new SqlConnection(BuildConnectionString());
             await conn.OpenAsync(ct);
@@ -828,75 +827,78 @@ namespace FinConsolidation
             var totals = new TableTotals();
             var rows = new List<List<object?>>(256);
 
-            HashSet<(string? o, string? d)>? groupSet =
-                (idxOrigin >= 0 && idxDest >= 0) ? new() : null;
+            // ✅ Store per‑group totals
+            var groupTotals =
+                new Dictionary<(string? o, string? d), (decimal tv, decimal con, bool hasCon)>();
 
             while (await rdr.ReadAsync(ct))
             {
                 totals.RowCount++;
 
-                // Capture Carrier once
+                // --- Scalars captured once ---
                 if (idxCarrier >= 0 && totals.Carrier == null && !rdr.IsDBNull(idxCarrier))
                 {
                     var c = rdr.GetValue(idxCarrier)?.ToString();
                     if (!string.IsNullOrWhiteSpace(c)) totals.Carrier = c;
                 }
 
-                // Capture ConPass once
                 if (idxConPass >= 0 && totals.ConPass == null && !rdr.IsDBNull(idxConPass))
                 {
                     var cp = rdr.GetValue(idxConPass)?.ToString();
                     if (!string.IsNullOrWhiteSpace(cp)) totals.ConPass = cp;
                 }
 
-                // Capture CalcPass once
                 if (idxCalcPass >= 0 && totals.CalcPass == null && !rdr.IsDBNull(idxCalcPass))
                 {
                     var cp = rdr.GetValue(idxCalcPass)?.ToString();
                     if (!string.IsNullOrWhiteSpace(cp)) totals.CalcPass = cp;
                 }
 
-                // Track Origin/Dest groups (optional)
-                if (groupSet != null)
-                {
-                    string? o = idxOrigin >= 0 && !rdr.IsDBNull(idxOrigin) ? rdr.GetValue(idxOrigin)?.ToString() : null;
-                    string? d = idxDest >= 0 && !rdr.IsDBNull(idxDest) ? rdr.GetValue(idxDest)?.ToString() : null;
-                    groupSet.Add((o, d));
-                }
+                string? o = idxOrigin >= 0 && !rdr.IsDBNull(idxOrigin)
+                    ? rdr.GetValue(idxOrigin)?.ToString()
+                    : null;
+
+                string? d = idxDest >= 0 && !rdr.IsDBNull(idxDest)
+                    ? rdr.GetValue(idxDest)?.ToString()
+                    : null;
+
+                var key = (o, d);
+                if (!groupTotals.TryGetValue(key, out var gt))
+                    gt = (0m, 0m, false);
 
                 var arr = new List<object?>(rdr.FieldCount);
+
                 for (int i = 0; i < rdr.FieldCount; i++)
                 {
                     if (rdr.IsDBNull(i)) { arr.Add(null); continue; }
+
                     var v = rdr.GetValue(i);
 
-                    // Accumulate precise totals for finance
                     if (i == idxTVAmt)
                     {
-                        if (v is decimal dv) totals.TVAmt += dv;
-                        else if (v is double dd) totals.TVAmt += (decimal)dd;
-                        else if (v is float ff) totals.TVAmt += (decimal)ff;
-                    }
-                    else if (i == idxConAmt)
-                    {
-                        totals.HasConAmt = true;
-
-                        //if (v is decimal dv) totals.ConAmt += dv;
-                        //else if (v is double dd) totals.ConAmt += (decimal)dd;
-                        //else if (v is float ff) totals.ConAmt += (decimal)ff;
-
-
-                        totals.HasConAmt = true;
-                        decimal val = v switch
+                        decimal tv = v switch
                         {
                             decimal dv => dv,
                             double dd => (decimal)dd,
                             float ff => (decimal)ff,
                             _ => 0m
                         };
-                        //if (val != 0m) totals.HasNonZeroConAmt = true;
-                        totals.ConAmt += val;
-
+                        totals.TVAmt += tv;
+                        gt.tv += tv;
+                    }
+                    else if (i == idxConAmt)
+                    {
+                        decimal con = v switch
+                        {
+                            decimal dv => dv,
+                            double dd => (decimal)dd,
+                            float ff => (decimal)ff,
+                            _ => 0m
+                        };
+                        totals.ConAmt += con;
+                        gt.con += con;
+                        if (con != 0m)
+                            gt.hasCon = true;
                     }
                     else if (i == idxCalcAmt)
                     {
@@ -905,44 +907,35 @@ namespace FinConsolidation
                         else if (v is float ff) totals.CalcAmt += (decimal)ff;
                     }
 
-                    // Normalize numeric/date types for JS payload
+                    // JS‑friendly normalization
                     if (v is DateTime dt) arr.Add(dt.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
                     else if (v is decimal dec) arr.Add((double)dec);
                     else if (v is float f) arr.Add((double)f);
                     else if (v is long l) arr.Add((double)l);
                     else if (v is int ii) arr.Add((double)ii);
-                    else if (v is short sh) arr.Add((double)sh);
-                    else if (v is byte b) arr.Add((double)b);
                     else arr.Add(v);
                 }
 
                 rows.Add(arr);
-
-                decimal baseAmt = 0m;
-                if (idxTVAmt >= 0 && !rdr.IsDBNull(idxTVAmt))
-                {
-                    var v = rdr.GetValue(idxTVAmt);
-                    if (v is decimal dv) baseAmt = dv;
-                    else if (v is double dd) baseAmt = (decimal)dd;
-                    else if (v is float ff) baseAmt = (decimal)ff;
-                }
-
-                decimal? conAmtRow = null;
-                if (idxConAmt >= 0 && !rdr.IsDBNull(idxConAmt))
-                {
-                    var v = rdr.GetValue(idxConAmt);
-                    if (v is decimal dv) conAmtRow = dv;
-                    else if (v is double dd) conAmtRow = (decimal)dd;
-                    else if (v is float ff) conAmtRow = (decimal)ff;
-                }
-
-                totals.AfterCombinedAmt += conAmtRow ?? baseAmt;
-
+                groupTotals[key] = gt;
             }
 
-            if (groupSet != null) totals.GroupCount = groupSet.Count;
+            totals.GroupCount = groupTotals.Count;
 
-            var table = new TablePayload { Columns = columns, Headers = headers, Rows = rows };
+            // ✅ FINAL: Sum per‑group "After" values
+            totals.AfterCombinedAmt = 0m;
+            foreach (var gt in groupTotals.Values)
+            {
+                totals.AfterCombinedAmt += gt.hasCon ? gt.con : gt.tv;
+            }
+
+            var table = new TablePayload
+            {
+                Columns = columns,
+                Headers = headers,
+                Rows = rows
+            };
+
             return (table, totals);
         }
 
