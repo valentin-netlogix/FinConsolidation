@@ -20,12 +20,16 @@ namespace FinConsolidation
         private string sqlServer = "";
         private string sqlDatabase = "";
 
+        private enum DataRegion { None, Nz, Au }
+        private DataRegion _region = DataRegion.None;
         private enum Env { Live, Uat }
         private Env _env = Env.Live;
         private string _serverLive = "";
-        private string _dbLive = "";
         private string _serverUat = "";
-        private string _dbUat = "";
+
+        private string _dbNz = "";
+        private string _dbAu = "";
+
         private bool _envConnected = false;
         private CancellationTokenSource? _connTestCts;
         private CancellationTokenSource? _currentLoadCts;
@@ -73,12 +77,24 @@ namespace FinConsolidation
             BtnRefreshRates
         }
 
+        private readonly ToolTip _toolTip = new ToolTip
+        {
+            AutoPopDelay = 5000,
+            InitialDelay = 500,
+            ReshowDelay = 200,
+            ShowAlways = true
+        };
+
 
         public FrmMain()
         {
             InitializeComponent();
 
             ResetActionButtons();
+
+
+            RbRegionNz.CheckedChanged += RegionRadio_CheckedChanged;
+            RbRegionAu.CheckedChanged += RegionRadio_CheckedChanged;
 
             RbEnvLive.CheckedChanged += EnvRadio_CheckedChanged;
             RbEnvUat.CheckedChanged += EnvRadio_CheckedChanged;
@@ -92,20 +108,18 @@ namespace FinConsolidation
             BtnFinChoiceAP.Enabled = false;
             BtnFinChoiceAR.Enabled = false;
 
-
             _serverLive = ConfigurationManager.AppSettings["SqlServerName_Live"]
-                       ?? ConfigurationManager.AppSettings["SqlServerName"]
-                       ?? throw new InvalidOperationException("Missing SqlServerName or SqlServerName_Live.");
-
-            _dbLive = ConfigurationManager.AppSettings["SqlDatabaseName"]
-                   ?? ConfigurationManager.AppSettings["SqlDatabaseName"]
-                   ?? throw new InvalidOperationException("Missing SqlDatabaseName or SqlDatabaseName.");
+                ?? throw new InvalidOperationException("Missing SqlServerName_Live");
 
             _serverUat = ConfigurationManager.AppSettings["SqlServerName_Uat"]
-                      ?? _serverLive;
+                ?? throw new InvalidOperationException("Missing SqlServerName_Uat");
 
-            _dbUat = ConfigurationManager.AppSettings["SqlDatabaseName"]
-                  ?? _dbLive;
+            _dbNz = ConfigurationManager.AppSettings["SqlDatabaseName_NZ"]
+                ?? throw new InvalidOperationException("Missing SqlDatabaseName_NZ");
+
+            _dbAu = ConfigurationManager.AppSettings["SqlDatabaseName_AU"]
+                ?? throw new InvalidOperationException("Missing SqlDatabaseName_AU");
+
 
             ApplyEnvironmentToConnectionFields();
 
@@ -235,13 +249,13 @@ namespace FinConsolidation
             }
         }
 
-        private void ApplyEnvironmentToConnectionFields()
-        {
+        //private void ApplyEnvironmentToConnectionFields()
+        //{
 
-            if (_env == Env.Live) { sqlServer = _serverLive; sqlDatabase = _dbLive; }
-            else { sqlServer = _serverUat; sqlDatabase = _dbUat; }
+        //    if (_env == Env.Live) { sqlServer = _serverLive; sqlDatabase = _dbLive; }
+        //    else { sqlServer = _serverUat; sqlDatabase = _dbUat; }
 
-        }
+        //}
 
         private static async Task<bool> TestSqlConnectivityBoundedAsync(
             string connStr, int timeoutSeconds, CancellationToken token)
@@ -297,6 +311,13 @@ namespace FinConsolidation
 
         private async Task TriggerEnvConnectionCheckAsync()
         {
+
+            if (_region == DataRegion.None || string.IsNullOrWhiteSpace(sqlServer) || string.IsNullOrWhiteSpace(sqlDatabase))
+            {
+                LblStatus.Text = "Please select Region and Environment";
+                return;
+            }
+
             // Disable AP/AR while checking
             BtnFinChoiceAP.Enabled = false;
             BtnFinChoiceAR.Enabled = false;
@@ -435,10 +456,32 @@ namespace FinConsolidation
             void apply()
             {
                 bool on = _envConnected && !_isRunning;
+
+                // AP is always allowed when connected
                 BtnFinChoiceAP.Enabled = on;
-                BtnFinChoiceAR.Enabled = on;
+                _toolTip.SetToolTip(BtnFinChoiceAP, null);
+
+                // AR rule: not available for AU
+                if (_region == DataRegion.Au)
+                {
+                    BtnFinChoiceAR.Enabled = false;
+
+                    _toolTip.SetToolTip(
+                        BtnFinChoiceAR,
+                        "AR (Accounts Receivable) is not available for the AU region."
+                    );
+                }
+                else
+                {
+                    BtnFinChoiceAR.Enabled = on;
+                    _toolTip.SetToolTip(BtnFinChoiceAR, null);
+                }
             }
-            if (InvokeRequired) BeginInvoke((Action)apply); else apply();
+
+            if (InvokeRequired)
+                BeginInvoke((Action)apply);
+            else
+                apply();
         }
 
         private async Task InitializeWebViewAsync()
@@ -1418,6 +1461,26 @@ namespace FinConsolidation
             await InitializeWebViewAsync();
         }
 
+        private void ApplyEnvironmentToConnectionFields()
+        {
+            // If either dimension is missing → no connection
+            if (_region == DataRegion.None)
+            {
+                sqlServer = "";
+                sqlDatabase = "";
+                return;
+            }
+
+            sqlServer = (_env == Env.Live) ? _serverLive : _serverUat;
+
+            sqlDatabase = _region switch
+            {
+                DataRegion.Nz => _dbNz,
+                DataRegion.Au => _dbAu,
+                _ => ""
+            };
+        }
+
         private async void BtnFinChoice_Click(object? sender, EventArgs e)
         {
             if (sender is not Button _btn)
@@ -1730,6 +1793,35 @@ namespace FinConsolidation
                     await AwaitNextRenderCompleteAsync();
                 SetBusy(false);
             }
+        }
+
+        private async void RegionRadio_CheckedChanged(object? sender, EventArgs e)
+        {
+            if (_suppressEnvHandler) return;
+
+            if (sender is not RadioButton rb || !rb.Checked)
+                return;
+
+            _region = ReferenceEquals(rb, RbRegionNz)
+                ? DataRegion.Nz
+                : DataRegion.Au;
+
+            ApplyEnvironmentToConnectionFields();
+
+            // Reset connection‑dependent state
+            _envConnected = false;
+            ResetActionButtons();
+            SetEnvActionButtons();
+
+            TxtItemSearch.Text = string.Empty;
+            PnlItemSearch.Visible = false;
+            PnlModRates.Visible = false;
+            PnlTotals.Visible = false;
+
+            LblStatus.Text = "Region selected — checking SQL…";
+
+            // Trigger connectivity only when both Region + Env exist
+            _ = TriggerEnvConnectionCheckAsync();
         }
 
 

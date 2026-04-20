@@ -75,6 +75,9 @@
             LblAppTitle = new Label();
             WebView = new Microsoft.Web.WebView2.WinForms.WebView2();
             toolStripContainer1 = new ToolStripContainer();
+            PnlRegion = new Panel();
+            RbRegionNz = new RadioButton();
+            RbRegionAu = new RadioButton();
             PnlLeft.SuspendLayout();
             PnlEnv.SuspendLayout();
             PnlVersion.SuspendLayout();
@@ -90,10 +93,12 @@
             TblTripSearchControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)WebView).BeginInit();
             toolStripContainer1.SuspendLayout();
+            PnlRegion.SuspendLayout();
             SuspendLayout();
             // 
             // PnlLeft
             // 
+            PnlLeft.Controls.Add(PnlRegion);
             PnlLeft.Controls.Add(PnlEnv);
             PnlLeft.Controls.Add(PnlVersion);
             PnlLeft.Controls.Add(TblFinChoiceBtn);
@@ -119,7 +124,7 @@
             // RbEnvUat
             // 
             RbEnvUat.AutoSize = true;
-            RbEnvUat.Location = new Point(22, 42);
+            RbEnvUat.Location = new Point(50, 42);
             RbEnvUat.Margin = new Padding(3, 2, 3, 2);
             RbEnvUat.Name = "RbEnvUat";
             RbEnvUat.Size = new Size(47, 19);
@@ -131,7 +136,7 @@
             // RbEnvLive
             // 
             RbEnvLive.AutoSize = true;
-            RbEnvLive.Location = new Point(22, 20);
+            RbEnvLive.Location = new Point(50, 20);
             RbEnvLive.Margin = new Padding(3, 2, 3, 2);
             RbEnvLive.Name = "RbEnvLive";
             RbEnvLive.Size = new Size(46, 19);
@@ -582,6 +587,37 @@
             toolStripContainer1.TabIndex = 5;
             toolStripContainer1.Text = "toolStripContainer1";
             // 
+            // PnlRegion
+            // 
+            PnlRegion.Controls.Add(RbRegionAu);
+            PnlRegion.Controls.Add(RbRegionNz);
+            PnlRegion.Location = new Point(6, 216);
+            PnlRegion.Name = "PnlRegion";
+            PnlRegion.Size = new Size(138, 85);
+            PnlRegion.TabIndex = 6;
+            // 
+            // RbRegionNz
+            // 
+            RbRegionNz.AutoSize = true;
+            RbRegionNz.Location = new Point(49, 21);
+            RbRegionNz.Name = "RbRegionNz";
+            RbRegionNz.Size = new Size(41, 19);
+            RbRegionNz.TabIndex = 0;
+            RbRegionNz.TabStop = true;
+            RbRegionNz.Text = "NZ";
+            RbRegionNz.UseVisualStyleBackColor = true;
+            // 
+            // RbRegionAu
+            // 
+            RbRegionAu.AutoSize = true;
+            RbRegionAu.Location = new Point(49, 46);
+            RbRegionAu.Name = "RbRegionAu";
+            RbRegionAu.Size = new Size(41, 19);
+            RbRegionAu.TabIndex = 7;
+            RbRegionAu.TabStop = true;
+            RbRegionAu.Text = "AU";
+            RbRegionAu.UseVisualStyleBackColor = true;
+            // 
             // FrmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -618,6 +654,8 @@
             ((System.ComponentModel.ISupportInitialize)WebView).EndInit();
             toolStripContainer1.ResumeLayout(false);
             toolStripContainer1.PerformLayout();
+            PnlRegion.ResumeLayout(false);
+            PnlRegion.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -670,5 +708,8 @@
         private Panel PnlEnv;
         private RadioButton RbEnvUat;
         private RadioButton RbEnvLive;
+        private Panel PnlRegion;
+        private RadioButton RbRegionNz;
+        private RadioButton RbRegionAu;
     }
 }
