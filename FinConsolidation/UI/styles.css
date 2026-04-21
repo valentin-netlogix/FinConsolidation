@@ -73,7 +73,12 @@ th.col-ConChCode {
 #tbl td.col-Qty,
 #tbl td.col-Wgt,
 #tbl td.col-Domain,
-#tbl td.col-TVAmt,
+
+#tbl td.col-TVAmt {
+  font-weight: 700;
+  background-color: #FFDDA8;
+}
+
 #tbl td.col-SVAmt,
 #tbl td.col-Inv,
 #tbl td.col-IsCon,
