@@ -1,9 +1,9 @@
 <Project Sdk="WixToolset.Sdk/5.0.2">
 	<PropertyGroup>
-		<OutputName>FinancialConsolidation-1.2.0</OutputName>
+		<OutputName>FinancialConsolidation-1.2.1</OutputName>
 		<OutputType>Package</OutputType>
 		<AppSrc>..\FinConsolidation\bin\Release\net8.0-windows\win-x64\publish</AppSrc>
-		<DefineConstants>AppSource=$(AppSrc);ProductVersion=1.2.0</DefineConstants>
+		<DefineConstants>AppSource=$(AppSrc);ProductVersion=1.2.1</DefineConstants>
 		
 		<!-- Suppress HEAT5151 (non-assembly warning) to clean up output -->
 		<SuppressSpecificWarnings>5151</SuppressSpecificWarnings>

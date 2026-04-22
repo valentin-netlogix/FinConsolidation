@@ -777,11 +777,11 @@ namespace FinConsolidation
 
             // AP: CalcTotAmt → header "CalcTotAmt"
             // AR: CalcAmt     → show as "CalcTotAmt" in UI for consistency
-            { "CalcTotAmt", "CalcTotAmt" },
-            { "CalcAmt",    "CalcTotAmt" },
 
-            { "CalcFaf", "CalcFafAmt" },  // match your existing "CalcFafAmt" header
-            { "CalcFafAmt", "CalcFafAmt" },
+            { "ConFaf", "ConFaf" },
+            { "CalcFaf", "CalcFaf" },
+            { "ConTotal", "ConTotal" },
+            { "CalcTotal", "CalcTotal" },
 
             // Existing AP-only (kept for compatibility)
             { "Domain", "Domain" },
@@ -860,6 +860,9 @@ namespace FinConsolidation
 
             int idxTVAmt = columns.FindIndex(c => c.Equals("TVAmt", StringComparison.OrdinalIgnoreCase));
             int idxConAmt = columns.FindIndex(c => c.Equals("ConAmt", StringComparison.OrdinalIgnoreCase));
+
+            int idxConTotal = columns.FindIndex(c => c.Equals("ConTotal", StringComparison.OrdinalIgnoreCase));
+
             int idxCalcAmt = columns.FindIndex(c => c.Equals("CalcTotAmt", StringComparison.OrdinalIgnoreCase));
             int idxCarrier = columns.FindIndex(c => c.Equals("Carrier", StringComparison.OrdinalIgnoreCase));
             int idxConPass = columns.FindIndex(c => c.Equals("ConPass", StringComparison.OrdinalIgnoreCase));
@@ -871,8 +874,9 @@ namespace FinConsolidation
             var rows = new List<List<object?>>(256);
 
             // ✅ Store per‑group totals
-            var groupTotals =
-                new Dictionary<(string? o, string? d), (decimal tv, decimal con, bool hasCon)>();
+            //var groupTotals =
+            //    new Dictionary<(string? o, string? d), (decimal tv, decimal con, bool hasCon)>();
+            var groupKeys = new HashSet<(string? o, string? d)>();
 
             while (await rdr.ReadAsync(ct))
             {
@@ -906,8 +910,10 @@ namespace FinConsolidation
                     : null;
 
                 var key = (o, d);
-                if (!groupTotals.TryGetValue(key, out var gt))
-                    gt = (0m, 0m, false);
+                groupKeys.Add(key);
+
+                //if (!groupTotals.TryGetValue(key, out var gt))
+                //    gt = (0m, 0m, false);
 
                 var arr = new List<object?>(rdr.FieldCount);
 
@@ -927,7 +933,7 @@ namespace FinConsolidation
                             _ => 0m
                         };
                         totals.TVAmt += tv;
-                        gt.tv += tv;
+                        //gt.tv += tv;
                     }
                     else if (i == idxConAmt)
                     {
@@ -939,15 +945,28 @@ namespace FinConsolidation
                             _ => 0m
                         };
                         totals.ConAmt += con;
-                        gt.con += con;
-                        if (con != 0m)
-                            gt.hasCon = true;
+                        //gt.con += con;
+                        //if (con != 0m)
+                        //    gt.hasCon = true;
                     }
                     else if (i == idxCalcAmt)
                     {
                         if (v is decimal dv) totals.CalcAmt += dv;
                         else if (v is double dd) totals.CalcAmt += (decimal)dd;
                         else if (v is float ff) totals.CalcAmt += (decimal)ff;
+                    }
+
+                    if (i == idxConTotal)
+                    {
+                        decimal conTotal = v switch
+                        {
+                            decimal dv => dv,
+                            double dd => (decimal)dd,
+                            float ff => (decimal)ff,
+                            _ => 0m
+                        };
+
+                        totals.AfterCombinedAmt += conTotal;
                     }
 
                     // JS‑friendly normalization
@@ -960,17 +979,11 @@ namespace FinConsolidation
                 }
 
                 rows.Add(arr);
-                groupTotals[key] = gt;
+                //groupTotals[key] = gt;
             }
 
-            totals.GroupCount = groupTotals.Count;
-
-            // ✅ FINAL: Sum per‑group "After" values
-            totals.AfterCombinedAmt = 0m;
-            foreach (var gt in groupTotals.Values)
-            {
-                totals.AfterCombinedAmt += gt.hasCon ? gt.con : gt.tv;
-            }
+            //totals.GroupCount = groupTotals.Count;
+            totals.GroupCount = groupKeys.Count;
 
             var table = new TablePayload
             {

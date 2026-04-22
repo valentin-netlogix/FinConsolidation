@@ -28,15 +28,14 @@ const columnAlignment = {
   'ConChCode': 'left',
   'ConAmt': 'right',
   'ConFaf': 'right',
-  'ConFafAmt': 'right',
+  'ConTotal': 'right',
   'ConMod': 'center',
   'UOM': 'center',
   'CalcCharge': 'left',
   'CalcChCode': 'left',
   'CalcAmt': 'right',    // AR "CalcTotAmt"
-  'CalcTotAmt': 'right',
   'CalcFaf': 'right',
-  'CalcFafAmt': 'right',
+  'CalcTotal': 'right',
   'CalcMod': 'center',
   'ConPass': 'center',
   'CalcPass': 'center',
@@ -49,11 +48,11 @@ const columnFormat = {
   'SVAmt':      { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
   'ConAmt':     { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
   'ConFaf':     { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
-  'ConFafAmt':  { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
+  'ConTotal':  { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
   'CalcAmt':    { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
-  'CalcTotAmt': { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
+  'CalcAmt': { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
   'CalcFaf':    { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
-  'CalcFafAmt': { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
+  'CalcTotal': { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
 
   'Qty': { type: 'number', minimumFractionDigits: 0, maximumFractionDigits: 0, useGrouping: false },
   'Vol': { type: 'number', minimumFractionDigits: 3, maximumFractionDigits: 3, useGrouping: false },
@@ -96,35 +95,32 @@ const columnWidthPx = {
   'SRRef': 120,
   'Client': 140, 
   'Consignment': 180, 
-  'Carrier': 60,
-  'Date': 90, 
+  'Carrier': 50,
+  'Date': 70, 
   'Status': 80, 
   'Trip': 60, 
   'VehType': 60,
-  // quantities
   'Qty': 50, 
   'Vol': 60, 
   'Wgt': 60, 
-  'UOM': 55,
-  // finance (AP+AR)
-  'TVAmt': 100, 
-  'SVAmt': 100,
+  'UOM': 35,
+  'TVAmt': 60, 
+  'SVAmt': 60,
   'ConCharge': 90, 
-  'ConChCode': 90, 
-  'ConAmt': 110, 
-  'ConFaf': 90, 
-  'ConFafAmt': 90, 
+  'ConChCode': 65, 
+  'ConAmt': 60, 
+  'ConFaf': 60,
+  'ConTotal': 60,
   'ConMod': 60,
   'CalcCharge': 90, 
-  'CalcChCode': 90, 
-  'CalcAmt': 110, 
-  'CalcTotAmt': 110, 
-  'CalcFaf': 90, 
-  'CalcFafAmt': 90, 
+  'CalcChCode': 65, 
+  'CalcAmt': 60, 
+  'CalcFaf': 60,
+  'CalcTotal': 60,
   'CalcMod': 60,
   // misc
   'Domain': 75, 
-  'Inv': 50, 
+  'Inv': 35, 
   'IsCon': 50, 
   'ConPass': 50,
   'CalcPass': 50,
@@ -334,7 +330,7 @@ function rowsGrouped(model, groupIdxs) {
 }
 
 // Group subtotal fields (match against original model.columns)
-const groupTotalFields = ['Qty', 'Vol', 'Wgt', 'TVAmt', 'SVAmt', 'ConAmt', 'CalcAmt', 'CalcTotAmt'];
+const groupTotalFields = ['Qty', 'Vol', 'Wgt', 'TVAmt', 'SVAmt', 'ConAmt', 'ConFaf', 'ConTotal', 'CalcAmt', 'CalcFaf', 'CalcTotal'];
 function computeGroupTotals(rows, columns, fieldNames) {
   const lowerCols = columns.map(c => normalizeKey(c));
   const idxMap = Object.fromEntries(
@@ -356,13 +352,17 @@ function computeGroupTotals(rows, columns, fieldNames) {
 /* =========================
    Rendering
    ========================= */
+
 function renderTableHeader(thead, headers) {
   const headHtml = headers.map(h => {
     const al = getAlignClass(h);
-    return `<th class="${al}" title="${escapeHtml(h)}">${escapeHtml(h)}</th>`;
+    const colCls = `col-${h.replace(/[^\w]/g, '')}`;
+    return `<th class="${al} ${colCls}" title="${escapeHtml(h)}">${escapeHtml(h)}</th>`;
   }).join('');
+
   thead.innerHTML = `<tr>${headHtml}</tr>`;
 }
+
 function renderTableBodyUngrouped(tbody, headers, rows) {
   const bodyHtml = rows.map(r => {
     const excluded = isExcludedRowByHeaders(r, headers);
@@ -422,7 +422,11 @@ function renderTableBodyGrouped(tbody, headers, model, groupIdxs, keepIdxs) {
       // If this visible column is totalled, render value
       if (groupTotalFields.some(n => normalizeKey(n) === normalizeKey(colName))) {
         const val = totals[colName];
-        return `<td class="${al}" title="${escapeHtml(String(val))}">${formatCellInnerHtml(val, colName)}</td>`;
+        const colCls = `col-${hdr.replace(/[^\w]/g,'')}`;
+        return `<td class="${al} ${colCls}" title="${escapeHtml(String(val))}">
+                  ${formatCellInnerHtml(val, colName)}
+                </td>`;
+
       }
       // Put the "Subtotal" label in the first visible column
       if (visIdx === 0) return `<td class="align-left" title="Subtotal for group">Subtotal</td>`;

@@ -55,6 +55,26 @@ th.col-ConChCode {
   word-break: break-word;
 }
 
+#tbl th,
+#tbl td {
+  box-sizing: border-box;
+}
+
+#tbl thead th {
+  white-space: normal;
+  line-height: 1.15;
+}
+
+#tbl thead th.col-TVAmt,
+#tbl thead th.col-ConAmt,
+#tbl thead th.col-ConFaf,
+#tbl thead th.col-ConTotal,
+#tbl thead th.col-CalcAmt,
+#tbl thead th.col-CalcFaf,
+#tbl thead th.col-CalcTotal {
+  padding-left: 2px;
+  padding-right: 2px;
+}
 
 #tbl td.col-ConCharge,
 #tbl td.col-ConChCode,
@@ -73,21 +93,18 @@ th.col-ConChCode {
 #tbl td.col-Qty,
 #tbl td.col-Wgt,
 #tbl td.col-Domain,
-
-#tbl td.col-TVAmt {
-  font-weight: 700;
-  background-color: #FFDDA8;
-}
-
+#tbl td.col-TVAmt,
 #tbl td.col-SVAmt,
 #tbl td.col-Inv,
 #tbl td.col-IsCon,
 #tbl td.col-UOM,
 #tbl td.col-ConAmt,
-#tbl td.col-ConFafAmt,
+#tbl td.col-ConFaf,
+#tbl td.col-ConTotal,
 #tbl td.col-ConMod,
-#tbl td.col-CalcTotAmt,
-#tbl td.col-CalcFafAmt,
+#tbl td.col-CalcAmt,
+#tbl td.col-CalcFaf,
+#tbl td.col-CalcTotal,
 #tbl td.col-CalcMod,
 #tbl td.col-ConPass,
 #tbl td.col-Excl {
@@ -101,6 +118,12 @@ th.col-ConChCode {
   font-size: 1em;             /* slightly smaller */
 }
 
+#tbl tbody td.col-TVAmt,
+#tbl tbody td.col-ConTotal,
+#tbl tbody td.col-CalcTotal {
+  font-weight: 700;
+  background-color: #FFDDA8;
+}
 
 /* Zebra striping */
 tbody tr:nth-child(even) {
@@ -125,11 +148,15 @@ tr.group-header td {
   border-bottom: 1px solid var(--border);
   text-align: left;
 }
+
 tr.group-footer td {
-  background: color-mix(in srgb, var(--headbg) 92%, #7bbdff);
+  background-color: #EEF3F8;
   font-weight: 700;
-  border-top: 1px solid var(--border);
-  padding: .40rem .50rem;
+  border-top: 2px solid #c9d7e6;
+}
+
+tr.group-footer td:not(.col-TVAmt):not(.col-ConTotal):not(.col-CalcTotal) {
+  color: #334;
 }
 
 /* Excluded rows (Excl = 'Y'): subtle diagonal hatch */
@@ -146,7 +173,7 @@ tbody tr.excluded {
   background-origin: border-box;
   background-clip: border-box;
 }
-tbody td { background-color: transparent; }
+
 
 @media (prefers-contrast: more) {
   tbody tr.excluded {
@@ -162,4 +189,11 @@ tbody td { background-color: transparent; }
 }
 
 /* Optional: allow horizontal scrolling on small windows */
-table { min-width: 1100px; }
+table { min-width: 2000px; }
+
+#tbl tr.group-footer td.col-TVAmt,
+#tbl tr.group-footer td.col-ConTotal,
+#tbl tr.group-footer td.col-CalcTotal {
+  background-color: #FFC97A;
+  font-weight: 700;
+}
