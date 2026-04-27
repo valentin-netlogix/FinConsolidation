@@ -50,7 +50,6 @@ const columnFormat = {
   'ConFaf':     { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
   'ConTotal':  { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
   'CalcAmt':    { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
-  'CalcAmt': { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
   'CalcFaf':    { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
   'CalcTotal': { type: 'currency', currency: 'NZD', locale: 'en-NZ', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: true, accounting: false },
 
@@ -94,14 +93,8 @@ const columnWidthPx = {
   'ShipmentID': 80, 
   'SRRef': 120,
   'Client': 140, 
-<<<<<<< HEAD
   'Consignment': 150,
-  'Date': 50, 
-=======
-  'Consignment': 180, 
-  'Carrier': 50,
-  'Date': 70, 
->>>>>>> 2a6852b5548abf2efe5128174638c85578bc4f8f
+  'Date': 50,
   'Status': 80, 
   'Trip': 60, 
   'VehType': 60,
