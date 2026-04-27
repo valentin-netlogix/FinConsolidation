@@ -94,8 +94,14 @@ const columnWidthPx = {
   'ShipmentID': 80, 
   'SRRef': 120,
   'Client': 140, 
+<<<<<<< HEAD
   'Consignment': 150,
   'Date': 50, 
+=======
+  'Consignment': 180, 
+  'Carrier': 50,
+  'Date': 70, 
+>>>>>>> 2a6852b5548abf2efe5128174638c85578bc4f8f
   'Status': 80, 
   'Trip': 60, 
   'VehType': 60,
