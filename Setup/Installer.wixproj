@@ -1,0 +1,33 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+	<PropertyGroup>
+		<OutputName>FinancialConsolidation-1.2.2</OutputName>
+		<OutputType>Package</OutputType>
+		<AppSrc>..\FinConsolidation\bin\Release\net8.0-windows\win-x64\publish</AppSrc>
+		<DefineConstants>AppSource=$(AppSrc);ProductVersion=1.2.2</DefineConstants>
+		
+		<!-- Suppress HEAT5151 (non-assembly warning) to clean up output -->
+		<SuppressSpecificWarnings>5151</SuppressSpecificWarnings>
+		<SuppressIces>ICE91</SuppressIces>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<HarvestDirectory Include="$(AppSrc)">
+			<ComponentGroupName>AppComponents</ComponentGroupName>
+			<DirectoryRefId>InstallDir</DirectoryRefId>
+			<PreprocessorVariable>var.AppSource</PreprocessorVariable>
+			<SuppressRootDirectory>true</SuppressRootDirectory>
+			<!-- 
+				WiX 5 handles auto-guids better when we don't force GenerateGuidsNow 
+				with XSLT transforms. We let the linker handle the generation.
+			-->
+			<AutogenerateGuids>true</AutogenerateGuids>
+			<Transforms>ForcePayloadRegistry.xslt</Transforms>
+		</HarvestDirectory>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="WixToolset.Heat" Version="5.0.2" />
+		<PackageReference Include="WixToolset.Util.wixext" Version="5.0.2" />
+		<PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+	</ItemGroup>
+</Project>
