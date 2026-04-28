@@ -21,7 +21,7 @@ const columnAlignment = {
   'Wgt': 'right',
   'Domain': 'left',
   'TVAmt': 'right',
-  'SVAmt': 'right',      // AR "TVAmt"
+  'SVAmt': 'right',
   'Inv': 'center',
   'IsCon': 'center',
   'ConCharge': 'left',
@@ -90,15 +90,15 @@ const grouping = {
 // Width presets (px). Keys can be SQL names OR friendly headers.
 const columnWidthPx = {
   // IDs & references
-  'ShipmentID': 80, 
+  'ShipmentID': 70,
+  'Consignment': 100,
   'SRRef': 120,
-  'Client': 140, 
-  'Consignment': 150,
-  'Date': 50,
+  'Client': 140,
+  'Date': 60,
   'Status': 80, 
   'Trip': 60, 
   'VehType': 60,
-  'Qty': 50, 
+  'Qty': 50,
   'Vol': 60, 
   'Wgt': 60, 
   'UOM': 35,
