@@ -83,6 +83,12 @@ const grouping = {
   }
 };
 
+const highlightColumns = new Set([
+  'TVAmt',
+  'ConTotal',
+  'CalcTotal'
+]);
+
 /* =========================
    Dynamic column widths
    ========================= */
@@ -368,12 +374,16 @@ function renderTableBodyUngrouped(tbody, headers, rows) {
       const hdr = headers[i];
       const al = getAlignClass(hdr);
       const raw = (v == null) ? '' : String(v);
-      return `<td class="${al} col-${hdr.replace(/[^\w]/g,'')}" title="${escapeHtml(raw)}">${formatCellInnerHtml(v, hdr)}</td>`;
+
+      const isHighlight = highlightColumns.has(hdr);
+      const highlightCls = isHighlight ? 'amount-highlight' : '';
+      return `<td class="${al} ${highlightCls} col-${hdr.replace(/[^\w]/g,'')}" title="${escapeHtml(raw)}">${formatCellInnerHtml(v, hdr)}</td>`;
     }).join('');
     return `<tr class="${excluded ? 'excluded' : ''}">${cells}</tr>`;
   }).join('');
   tbody.innerHTML = bodyHtml;
 }
+
 function renderTableBodyGrouped(tbody, headers, model, groupIdxs, keepIdxs) {
   // Stable sort by Origin, then Destination (optional)
   const groups = rowsGrouped(model, groupIdxs).sort((a, b) => {
@@ -402,7 +412,11 @@ function renderTableBodyGrouped(tbody, headers, model, groupIdxs, keepIdxs) {
         const hdr = headers[i]; // display header (after projection)
         const al  = getAlignClass(hdr);
         const raw = (v == null) ? '' : String(v);
-        return `<td class="${al} col-${hdr.replace(/[^\w]/g,'')}" title="${escapeHtml(raw)}">${formatCellInnerHtml(v, hdr)}</td>`;
+
+
+        const isHighlight = highlightColumns.has(hdr);
+        const highlightCls = isHighlight ? 'amount-highlight' : '';
+        return `<td class="${al} ${highlightCls} col-${hdr.replace(/[^\w]/g,'')}" title="${escapeHtml(raw)}">${formatCellInnerHtml(v, hdr)}</td>`;
       }).join('');
       const excluded = isExcludedRowByHeaders(r, headers);
       return `<tr class="${excluded ? 'excluded' : ''}">${tds}</tr>`;
@@ -420,8 +434,14 @@ function renderTableBodyGrouped(tbody, headers, model, groupIdxs, keepIdxs) {
       // If this visible column is totalled, render value
       if (groupTotalFields.some(n => normalizeKey(n) === normalizeKey(colName))) {
         const val = totals[colName];
+
         const colCls = `col-${hdr.replace(/[^\w]/g,'')}`;
-        return `<td class="${al} ${colCls}" title="${escapeHtml(String(val))}">
+        const isHighlight = highlightColumns.has(colName);
+        const highlightCls = isHighlight ? 'amount-highlight' : '';
+
+
+        return `<td class="${al} ${highlightCls} ${colCls}" 
+                    title="${escapeHtml(String(val))}">
                   ${formatCellInnerHtml(val, colName)}
                 </td>`;
 

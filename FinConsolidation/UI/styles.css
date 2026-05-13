@@ -60,13 +60,12 @@ tbody td {
   white-space: nowrap;
 }
 
-tbody tr:not(.group-header):not(.group-footer):nth-child(even) td {
+tbody tr:not(.group-header):not(.group-footer):nth-child(even) td:not(.amount-highlight) {
   background-color: #fafbfc;
 }
 
-tbody tr:hover td {
+tbody tr:hover td:not(.amount-highlight) {
   background-color: #e6efff;
-  border-bottom-color: #b6c8e6;
 }
 
 /* All cells share the same vertical rhythm */
@@ -145,6 +144,13 @@ td.col-CalcChCode {
   overflow-wrap: anywhere; /* better than break-all */
 }
 
+td.col-TVAmt.amount-highlight,
+td.col-ConTotal.amount-highlight,
+td.col-CalcTotal.amount-highlight {
+  background-color: #fbd38d;
+  font-weight: 600;
+}
+
 tr.group-header td {
   background-color: #e7ebf0;
   font-weight: 600;
@@ -173,7 +179,7 @@ tr.group-footer td {
 }
 
 .amount-highlight {
-  background-color: #ffebc3;
+  background-color: #fde9c9;
 }
 
 .table-scroll {
