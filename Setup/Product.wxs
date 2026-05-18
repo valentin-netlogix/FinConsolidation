@@ -16,7 +16,7 @@
 	AllowSameVersionUpgrades="no"
 	DowngradeErrorMessage="A newer version is already installed." />
 
-	<Icon Id="AppIcon" SourceFile="fin_con.ico" />
+	<Icon Id="AppIcon.ico" SourceFile="fin_con.ico" />
 
 	<Property Id="ARPHELPLINK" Value="https://netlogixgroup.co.nz" />
 	<Property Id="ARPURLINFOABOUT" Value="https://netlogixgroup.co.nz" />
@@ -82,7 +82,7 @@
 			Name="FinConsolidation"
 			Target="[ExePath]"
 			WorkingDirectory="InstallDir" 
-			Icon="AppIcon" />
+			Icon="AppIcon.ico" />
 		<RegistryValue Root="HKCU" Key="Software\Netlogix\FinConsolidation" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
 	</Component>
 
@@ -92,7 +92,7 @@
 			Name="FinConsolidation"
 			Target="[ExePath]"
 			WorkingDirectory="InstallDir"
-			Icon="AppIcon" />
+			Icon="AppIcon.ico" />
 		<RegistryValue Root="HKCU" Key="Software\Netlogix\FinConsolidation" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
 	</Component>
 
